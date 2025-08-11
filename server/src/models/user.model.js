@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 
 
 const userSchema = new Schema({
-    username:{
+    name:{
         type: String,
         required:true,
         unique : true,
@@ -19,23 +19,23 @@ const userSchema = new Schema({
         lowercase:true,
         trim:true
     },
-    fullname:{
-        type: String,
-        lowercase:true,
-        trim:true,
-        index:true
-    },
-    avatar:{
-        type: String,
-        required: true
-    },
-    coverImage:{
-        type:String,
-    },
-    watchHistory:[{
-        type:Schema.Types.ObjectId,
-        ref:"Video"
-    }],
+    // fullname:{
+    //     type: String,
+    //     lowercase:true,
+    //     trim:true,
+    //     index:true
+    // },
+    // avatar:{
+    //     type: String,
+    //     required: true
+    // },
+    // coverImage:{
+    //     type:String,
+    // },
+    // watchHistory:[{
+    //     type:Schema.Types.ObjectId,
+    //     ref:"Video"
+    // }],
     password:{
          type: String, 
          required:[true,"Password is Required"]
