@@ -9,10 +9,11 @@ import Token from "../models/token.model.js";
 const generateAccessTokenAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId)
+        console.log("user:", user);
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
-
+        console.log("accessToken, refreshToken:", accessToken, refreshToken);
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
 
