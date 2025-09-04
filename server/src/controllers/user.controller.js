@@ -28,6 +28,7 @@ const cookieOptions = {
     secure: true,       // required for HTTPS
     sameSite: "none",   // must be exactly `sameSite`
     path: "/",
+    domain:".onrender.com",
     maxAge: 24 * 60 * 60 * 1000 // 1 day
 };
 
