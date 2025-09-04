@@ -23,6 +23,14 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
         throw new APIError(500, "Something Went wrong while generating access and refresh Token")
     }
 }
+const cookieOptions = {
+    httpOnly: true,
+    secure: true,       // required for HTTPS
+    sameSite: "none",   // must be exactly `sameSite`
+    path: "/",
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+};
+
 
 const registerUser = asyncHandler(async (req, res) => {
     //get userDatails from FrontEnd 
@@ -108,16 +116,16 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new APIError(500, "Something went wrong while creating Token account creation failed")
     }
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-        samesite: "none",
-        path: "/",
-        maxage: 24 * 60 * 60 * 1000 //1 day
-    }
+    // const options = {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: "none",
+    //     path: "/",
+    //     maxAge: 24 * 60 * 60 * 1000 //1 day
+    // }
     return res.status(201)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, cookieOptions)
+        .cookie("refreshToken", refreshToken, cookieOptions)
         .json(
 
             new APIresponse(
@@ -136,7 +144,7 @@ const loginUser = asyncHandler(async (req, res) => {
     // find user in database
     // check Password
     // generate AccessToken and Refresh Token
-    // send Cookies
+    // send cookie
     //response of successfull transfer
 
     const { email, password } = req.body
@@ -164,19 +172,19 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-        samesite: "none",
-        path: "/",
-        maxage: 24 * 60 * 60 * 1000 //1 day
-    }
+    // const options = {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: "none",
+    //     path: "/",
+    //     maxAge: 24 * 60 * 60 * 1000 //1 day
+    // }
 
 
     return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
+        .cookie("accessToken", accessToken, cookieOptions)
+        .cookie("refreshToken", refreshToken, cookieOptions)
         .json(
             new APIresponse(
                 200,
@@ -190,7 +198,7 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const logoutUser = asyncHandler(async (req, res) => {
-    //clear cookies 
+    //clear cookie 
     await User.findByIdAndUpdate(
         req.user._id,
         {
@@ -204,17 +212,17 @@ const logoutUser = asyncHandler(async (req, res) => {
     )
 
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-        samesite: "none",
-        path: "/",
-        maxage: 24 * 60 * 60 * 1000 //1 day
-    }
+    // const options = {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: "none",
+    //     path: "/",
+    //     maxAge: 24 * 60 * 60 * 1000 //1 day
+    // }
     return res
         .status(200)
-        .clearCookie("accessToken")
-        .clearCookie("refreshToken")
+        .clearCookie("accessToken", cookieOptions)
+        .clearCookie("refreshToken", cookieOptions)
         .json(new APIresponse(200, {}, "User Logged Out"))
 })
 
@@ -242,20 +250,20 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         }
 
 
-        const options = {
-            httpOnly: true,
-            secure: true,
-            samesite: "none",
-            path: "/",
-            maxage: 24 * 60 * 60 * 1000 //1 day
-        }
+        // const options = {
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: "none",
+        //     path: "/",
+        //     maxAge: 24 * 60 * 60 * 1000 //1 day
+        // }
 
         const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id)
 
         return res
             .status(200)
-            .cookies("accessToken", accessToken, options)
-            .cookies("refreshToken", refreshToken, options)
+            .cookie("accessToken", accessToken, cookieOptions)
+            .cookie("refreshToken", refreshToken, cookieOptions)
             .json(
                 new APIresponse(200, { accessToken, refreshToken: refreshToken }, "Access Token Refreshed")
             )
