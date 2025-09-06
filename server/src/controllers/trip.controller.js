@@ -9,11 +9,13 @@ import { Trip } from "../models/newTrip.model.js";
 
 const createTrip = asyncHandler(async (req, res) => {
   console.log("Create trip request received");
-  const { name, startDate, endDate, destination, color, active, days } = req.body;
+  const { name, startDate, endDate, destination, color, active, days,userId } = req.body;
   console.log("Request body:", req.body);
   if (!name || !color || !startDate || !endDate || !destination) {
     throw new APIError("All fields are required", 400);
   }
+  // db.trips.getIndexes()
+
   const newTrip = {
     tripName: name,
     // description,
@@ -22,20 +24,36 @@ const createTrip = asyncHandler(async (req, res) => {
     destination,
     color,
     active,
-    days
-    // user: req.user._id,
+    days,
+    userId
   };
   console.log("New trip data:", newTrip);
   const saveTrip = await Trip.create(newTrip);
   console.log("Trip created successfully:", saveTrip);
+  res.status(201).json({
+    success:true,
+    message:`Trip created for ${userId}`,
+    data:saveTrip
+  })
 });
 
 const getAllTrip = asyncHandler(async (req, res) => {
   console.log("Get all trips request received");
-  const trips = await Trip.find({}).sort({ createdAt: -1 });
+  //get user id from verifyjwt middleware
+  const user = req.user;
+  const userId = user?._id;
+  console.log("User ID from middleware:", userId);
+ 
+  if(!user?._id){
+    throw new APIError("User ID is required",400);
+  }
+  // const trips = await Trip.find({}).sort({ createdAt: -1 });
+  const trips= await Trip.find({userId}).sort({createdAt:-1});
+  
   console.log("Trips retrieved successfully:", trips);
   res.status(200).json({
     success: true,
+    message:"Trips fetched successfully",
     data: trips,
   });
   // res.status(201).json({
@@ -54,5 +72,6 @@ const createNewDay = asyncHandler(async (req, res) => {
   }
   // const newDay= 
 })
+
 
 export { createTrip, getAllTrip };

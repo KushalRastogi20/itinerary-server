@@ -4,7 +4,7 @@ const daySchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
-        unique: true
+        // unique: true
     },
     activities: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -21,6 +21,11 @@ const newTripSchema = new mongoose.Schema(
     tripName: {
       type: String,
       required: true,
+    },
+    userId:{
+      type: String,
+      required:true 
+
     },
     destination: {
       type: String,
